@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "108192911134",
+    "project_id": "bayt-c76f3",
+    "storage_bucket": "bayt-c76f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108192911134:android:371b24c88fcfa9d1a1c30f",
+        "android_client_info": {
+          "package_name": "com.example.bayt_test_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108192911134-1e3o0stcgudgf40psse3brpu4qjuon9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRAue_6l8e3JU9HJn7lwwt1DPvMO5UWhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108192911134-1e3o0stcgudgf40psse3brpu4qjuon9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "108192911134-gbabq05ctjl0e2lq1dg91ioc6kraju6g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.baytTestApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108192911134:android:cfc59a368fe61336a1c30f",
+        "android_client_info": {
+          "package_name": "com.example.byat_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108192911134-1e3o0stcgudgf40psse3brpu4qjuon9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRAue_6l8e3JU9HJn7lwwt1DPvMO5UWhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108192911134-1e3o0stcgudgf40psse3brpu4qjuon9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "108192911134-gbabq05ctjl0e2lq1dg91ioc6kraju6g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.baytTestApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
