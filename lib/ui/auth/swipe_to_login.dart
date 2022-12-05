@@ -23,22 +23,21 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
   _onPageChange() {
     widget.pageController.addListener(() {
       final pos = widget.pageController.position;
-      final isScrolledPixellLess = pos.pixels <= (pos.maxScrollExtent / 2) && pos.pixels > pos.minScrollExtent;
-  
+
       if (pos.userScrollDirection == ScrollDirection.reverse) {
-        if(isScrolledPixellLess) {
-          // spacing += 2;
-        } else {
-          // spacing += 1;
+        if (pos.pixels <= pos.maxScrollExtent) {
+          spacing += 5;
         }
-      } else  {
-        if(!isScrolledPixellLess) {
-          // spacing -= 2;
+      } else {
+        if (pos.pixels < 0) {
+          spacing += 5;
+        } else if (pos.pixels == pos.minScrollExtent) {
+          spacing = 0;
         } else {
-          // spacing -= 1;
+          spacing -= 5;
         }
       }
-      // setState(() {});
+      setState(() {});
       debugPrint(
           'Swiping... Axis ${pos.pixels} | ${pos.minScrollExtent} | ${pos.maxScrollExtent}  || User Scroll ${pos.userScrollDirection}');
     });
@@ -97,7 +96,7 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
                     Text('Swipe up to Log In',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary)),
-                    SizedBox(height: spacing),
+                    AnimatedContainer(duration: const Duration(milliseconds: 300), height: spacing),
                   ],
                 ),
               ),
