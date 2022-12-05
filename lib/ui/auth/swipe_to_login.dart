@@ -1,8 +1,7 @@
 import 'package:byat_flutter/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class SwipeToLoginUI extends StatefulWidget {
@@ -40,7 +39,6 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
       setState(() {});
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +88,7 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
                       child: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: const BoxDecoration(
-                            color: ByatColors.white, shape: BoxShape.circle),
+                            color: ByatColors.primary, shape: BoxShape.circle),
                         child: const Icon(
                           Icons.arrow_upward,
                           size: 20,
@@ -98,7 +96,7 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text('Swipe up to Log In',
+                    Text('swipe_up_log_in'.tr(),
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary)),
                   ],

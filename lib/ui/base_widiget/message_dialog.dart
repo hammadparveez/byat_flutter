@@ -10,7 +10,7 @@ class MessageDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset('assets/logo.png', height: 40, width: 40),
+          Image.asset('assets/images/logo.png', height: 40, width: 40),
           const SizedBox(height: 8),
           Text(title),
         ],

@@ -51,6 +51,8 @@ class AnimatedSearchBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ByatTextField(
+                      controller:
+                          context.read<SearchProvider>().searchController,
                       focusNode: context.read<SearchProvider>().searchFocusNode,
                       showBorder: false,
                       suffixIconColor: Theme.of(context).colorScheme.onPrimary,

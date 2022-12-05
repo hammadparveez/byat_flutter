@@ -37,8 +37,9 @@ class FilterSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * .6,
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8, 10, 8, 0),
+      height: MediaQuery.of(context).size.height * .65,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -47,9 +48,6 @@ class FilterSheet extends StatelessWidget {
             _filterByNationality(),
             _filterDateRange(context),
             const Spacer(),
-            // ByatElevatedButton(
-            //     title: 'Select By Date Range',
-            //     onTap: () => _openDateRangeSelector(context)),
             Row(
               children: [
                 Expanded(
