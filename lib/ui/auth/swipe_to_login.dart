@@ -17,31 +17,30 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
   @override
   initState() {
     super.initState();
-    _onPageChange();
+    _animateOnSwiping();
   }
 
-  _onPageChange() {
+  _animateOnSwiping() {
     widget.pageController.addListener(() {
+      if (!mounted) return;
       final pos = widget.pageController.position;
 
-      if (pos.userScrollDirection == ScrollDirection.reverse) {
-        if (pos.pixels <= pos.maxScrollExtent) {
-          spacing += 5;
-        }
+      if (pos.userScrollDirection == ScrollDirection.reverse &&
+          pos.pixels <= pos.maxScrollExtent) {
+        spacing += 1.5;
+      } else if (pos.pixels == pos.minScrollExtent) {
+        spacing = 0;
       } else {
         if (pos.pixels < 0) {
-          spacing += 5;
-        } else if (pos.pixels == pos.minScrollExtent) {
-          spacing = 0;
-        } else {
-          spacing -= 5;
+          spacing += 1;
+        } else if (spacing > 0) {
+          spacing -= 1.5;
         }
       }
       setState(() {});
-      debugPrint(
-          'Swiping... Axis ${pos.pixels} | ${pos.minScrollExtent} | ${pos.maxScrollExtent}  || User Scroll ${pos.userScrollDirection}');
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +48,14 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [
-          ByatColors.primary,
-          ByatColors.primaryDark,
-        ])),
+            gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.center,
+          colors: [
+            ByatColors.primary,
+            ByatColors.primaryDark,
+          ],
+        )),
         child: SafeArea(
           child: Column(
             children: [
@@ -68,6 +71,8 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
                       width: 50, height: 50),
                 ),
               ),
+              AnimatedContainer(
+                  duration: const Duration(milliseconds: 300), height: spacing),
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +101,6 @@ class _SwipeToLoginUIState extends State<SwipeToLoginUI> {
                     Text('Swipe up to Log In',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.onPrimary)),
-                    AnimatedContainer(duration: const Duration(milliseconds: 300), height: spacing),
                   ],
                 ),
               ),

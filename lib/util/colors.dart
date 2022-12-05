@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ByatColors {
-  static const primary = Color(0xFF3D56F0);
-  static const primaryDark = Color(0xFF0625EF);
+  static const primary = Color(0xff8fd3f8);
+  static const primaryDark = Color(0xFF61C3F8);
   static const white = Colors.white;
   static const black = Colors.black;
   static const ligtGrey = Color(0xFFC4C4C4);

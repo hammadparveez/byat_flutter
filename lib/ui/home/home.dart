@@ -1,3 +1,4 @@
+import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:byat_flutter/domain/model/user_model.dart';
 import 'package:byat_flutter/provider/filter_provider.dart';
 
@@ -110,41 +111,52 @@ class _HomeUIState extends State<HomeUI> {
     );
   }
 
-  Material _buildTopBar() {
+  Widget _buildTopBar() {
     final safeAreaPadding = MediaQuery.of(context).padding.top + 8;
-    return Material(
-      color: Theme.of(context).colorScheme.primary,
-      elevation: 8,
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        boxShadow: [
+          BoxShadow(blurRadius: 10, color: ByatColors.darkGrey),
+        ],
+      ),
       child: Padding(
         padding: EdgeInsets.fromLTRB(16, safeAreaPadding, 8, 0),
         child: Row(
           children: [
             Expanded(
-              child: ByatTextField(
-                  controller: context.read<SearchProvider>().searchController,
-                  focusNode: context.read<SearchProvider>().searchFocusNode,
-                  showBorder: false,
-                  suffixIconColor: Theme.of(context).colorScheme.onPrimary,
-                  textColor: Theme.of(context).colorScheme.onPrimary,
-                  cursorColor: Theme.of(context).colorScheme.onPrimary,
-                  suffixIcon: Consumer<SearchProvider>(
-                      builder: (context, searchProvider, child) {
-                    final hasFocus = searchProvider.searchFocusNode!.hasFocus;
-                    return IconButton(
-                      color: ByatColors.white,
-                      icon: hasFocus
-                          ? const Icon(Icons.close)
-                          : const Icon(Icons.search),
-                      onPressed: () {
-                        if (hasFocus) {
-                          searchProvider.searchController!.clear();
-                        } else {
-                          searchProvider.searchFocusNode!.requestFocus();
-                        }
-                      },
-                    );
-                  })),
+              child: AnimSearchBar(
+                  width: 300,
+                  textController:
+                      context.read<SearchProvider>().searchController!,
+                  onSuffixTap: () {}),
             ),
+            // Expanded(
+            //   child: ByatTextField(
+
+            //       focusNode: context.read<SearchProvider>().searchFocusNode,
+            //       showBorder: false,
+            //       suffixIconColor: Theme.of(context).colorScheme.onPrimary,
+            //       textColor: Theme.of(context).colorScheme.onPrimary,
+            //       cursorColor: Theme.of(context).colorScheme.onPrimary,
+            //       suffixIcon: Consumer<SearchProvider>(
+            //           builder: (context, searchProvider, child) {
+            //         final hasFocus = searchProvider.searchFocusNode!.hasFocus;
+            //         return IconButton(
+            //           color: ByatColors.white,
+            //           icon: hasFocus
+            //               ? const Icon(Icons.close)
+            //               : const Icon(Icons.search),
+            //           onPressed: () {
+            //             if (hasFocus) {
+            //               searchProvider.searchController!.clear();
+            //             } else {
+            //               searchProvider.searchFocusNode!.requestFocus();
+            //             }
+            //           },
+            //         );
+            //       })),
+            // ),
             IconButton(
                 color: Theme.of(context).colorScheme.onPrimary,
                 onPressed: () => showModalBottomSheet(
@@ -166,28 +178,96 @@ class _UsersListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer2<FilterProvider, SearchProvider>(
         builder: (context, filter, searchProvider, child) {
-      return PagedListView<int, UserModel>(
-        pagingController: controller,
-        builderDelegate:
-            PagedChildBuilderDelegate(itemBuilder: (_, user, index) {
-          final date = DateFormat.yMMMd().format(user.date);
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: PagedListView<int, UserModel>.separated(
+          pagingController: controller,
+          separatorBuilder: (_, index) => const SizedBox(height: 12),
+          builderDelegate:
+              PagedChildBuilderDelegate(itemBuilder: (_, user, index) {
+            final date = DateFormat.yMMMd().format(user.date);
 
-          return ListTile(
-            onTap: () {
-              filter.onUserSelect(user);
-              Navigator.pushNamed(context, ByatRoute.userDetail);
-            },
-            title: Text("${index} - ${user.name}"),
-            trailing: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('Date: $date'),
-                const SizedBox(width: 8),
-                Text('Nationality: ${user.nationality}'),
-              ],
-            ),
-          );
-        }),
+            return GestureDetector(
+              onTap: () {
+                filter.onUserSelect(user);
+                Navigator.pushNamed(context, ByatRoute.userDetail);
+              },
+              child: Container(
+                height: 120,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Theme.of(context).colorScheme.onPrimary),
+                          shape: BoxShape.circle,
+                          boxShadow: const [
+                            BoxShadow(
+                                blurRadius: 5, color: ByatColors.primaryDark)
+                          ],
+                          image: const DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage('assets/images/home.jpg'))),
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(user.name,
+                            style: TextStyle(
+                                fontSize: 20,
+                                overflow: TextOverflow.ellipsis,
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    Theme.of(context).colorScheme.onPrimary)),
+                        Text(
+                          user.nationality,
+                          style: TextStyle(
+                            height: 1.5,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 30,
+                          child: Divider(
+                            thickness: 2,
+                            color: ByatColors.white,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'Date: $date',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    Material(
+                      clipBehavior: Clip.hardEdge,
+                      type: MaterialType.transparency,
+                      shape: const CircleBorder(),
+                      child: IconButton(
+                          splashColor: ByatColors.primaryDark,
+                          onPressed: () {},
+                          icon: const Icon(Icons.more_vert_rounded)),
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
+        ),
       );
       // return ListView.separated(
       //     padding: const EdgeInsets.only(top: 20),
