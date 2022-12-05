@@ -1,4 +1,3 @@
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:byat_flutter/domain/model/user_model.dart';
 import 'package:byat_flutter/provider/filter_provider.dart';
 
@@ -7,6 +6,7 @@ import 'package:byat_flutter/routes.dart';
 import 'package:byat_flutter/ui/base_widiget/custom_badge.dart';
 import 'package:byat_flutter/ui/base_widiget/text_field.dart';
 import 'package:byat_flutter/ui//home/components/filter_sheet.dart';
+import 'package:byat_flutter/ui/home/components/animated_search_bar.dart';
 import 'package:byat_flutter/util/colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -125,14 +125,10 @@ class _HomeUIState extends State<HomeUI> {
         child: Row(
           children: [
             Expanded(
-              child: AnimSearchBar(
-                  width: 300,
-                  textController:
-                      context.read<SearchProvider>().searchController!,
-                  onSuffixTap: () {}),
+              child: AnimatedSearchBar(),
             ),
             // Expanded(
-            //   child: ByatTextField(
+              //  ByatTextField(
 
             //       focusNode: context.read<SearchProvider>().searchFocusNode,
             //       showBorder: false,

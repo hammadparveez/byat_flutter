@@ -11,9 +11,15 @@ class SearchProvider extends ChangeNotifier {
   FilterProvider? filterProvider;
   final savedHistoryMaxLength = 12;
   List<String> searchedHistory = [];
-  SearchProvider();
+  bool isSearching = false;
 
   void update(FilterProvider provider) => filterProvider = provider;
+
+  toggleSearch() {
+    isSearching = !isSearching;
+    notifyListeners();
+  }
+
   void searchContentByName(String? name) {
     final filter = filterProvider!;
     filter.users = _getSearchedUsers(name);
