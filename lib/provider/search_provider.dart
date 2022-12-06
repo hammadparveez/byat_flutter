@@ -6,15 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:byat_flutter/util/extensions.dart';
 
 class SearchProvider extends ChangeNotifier {
+  FilterProvider? filterProvider;
   TextEditingController? searchController;
   FocusNode? searchFocusNode;
-  FilterProvider? filterProvider;
-  final savedHistoryMaxLength = 12;
+
+
   List<String> searchedHistory = [];
   bool isSearching = false;
+  final savedHistoryMaxLength = 12;
 
+  ///Setter for watch FilterProvider 
   void update(FilterProvider provider) => filterProvider = provider;
 
+  bool get hasFocus => searchFocusNode?.hasFocus ?? false;
+  String? get text => searchController?.text;
+
+  
   toggleSearch() {
     isSearching = !isSearching;
     notifyListeners();

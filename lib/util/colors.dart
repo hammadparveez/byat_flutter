@@ -10,3 +10,8 @@ class ByatColors {
   static const dropdownColor = Color(0xFF303030);
   static const dropdownArrowColor = Colors.white70;
 }
+
+class ByatStyles {
+  static const TextStyle heading5 = TextStyle(fontSize: 20, fontWeight: FontWeight.bold,overflow:  TextOverflow.ellipsis);
+
+}

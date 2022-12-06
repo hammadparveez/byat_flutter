@@ -2,11 +2,58 @@ import 'package:byat_flutter/provider/search_provider.dart';
 import 'package:byat_flutter/ui/base_widiget/text_field.dart';
 import 'package:byat_flutter/util/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'package:provider/provider.dart';
 
-class AnimatedSearchBar extends StatelessWidget {
-  const AnimatedSearchBar({super.key});
+class AnimatedSearchBar extends StatefulWidget {
+  const AnimatedSearchBar({super.key, required this.controller});
+  final PagingController controller;
+  @override
+  State<AnimatedSearchBar> createState() => _AnimatedSearchBarState();
+}
+
+class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
+  late final SearchProvider _searchProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _initControllers();
+    _attachListener();
+  }
+
+  //Initializing controllers
+  _initControllers() {
+    _searchProvider = context.read<SearchProvider>();
+    _searchProvider.searchController = TextEditingController();
+    _searchProvider.searchFocusNode = FocusNode();
+  }
+  //Attaching Listeners
+  _attachListener() {
+    _searchProvider.searchController!.addListener(_searchControllerListener);
+    _searchProvider.searchFocusNode!.addListener(() {
+      _searchProvider.saveSearchHistory();
+      if (!_searchProvider.hasFocus) {
+        _searchProvider.toggleSearch();
+      }
+    });
+  }
+
+  _searchControllerListener() {
+    _searchProvider.searchContentByName(_searchProvider.text);
+    if (_searchProvider.text!.isNotEmpty) {
+      widget.controller.refresh();
+    }
+  }
+
+  @override
+  void dispose() {
+    // _searchProvider.searchController!.removeListener(_searchControllerListener);
+    _searchProvider.searchController!.dispose();
+    _searchProvider.searchFocusNode!.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

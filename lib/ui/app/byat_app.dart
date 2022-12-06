@@ -14,12 +14,15 @@ class ByatApp extends StatelessWidget {
   ByatApp({super.key});
   final localePath = 'assets/translations';
 
+  static const _textTheme =  TextTheme(headline5: ByatStyles.heading5);
+
   final lightTheme = ThemeData(
     indicatorColor: ByatColors.primaryDark,
     cardColor: ByatColors.primary,
     colorScheme: const ColorScheme.light(
       primary: ByatColors.primary,
     ),
+    textTheme: _textTheme,
   );
 
   final darkTheme = ThemeData(
@@ -31,6 +34,7 @@ class ByatApp extends StatelessWidget {
       surface: ByatColors.primary,
       secondary: ByatColors.white,
     ),
+    textTheme: _textTheme
   );
   @override
   Widget build(BuildContext context) {
@@ -59,6 +63,7 @@ class ByatApp extends StatelessWidget {
             themeMode: context.watch<ThemeProvider>().themeMode,
             darkTheme: darkTheme,
             theme: lightTheme,
+            
             onGenerateRoute: ByatRoute.onGenerateRoute,
             initialRoute: ByatRoute.main,
             navigatorKey: ByatRoute.navigatorKey,
