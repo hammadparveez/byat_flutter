@@ -8,6 +8,7 @@ import 'package:byat_flutter/ui/base_widiget/elevated_button.dart';
 
 import 'package:byat_flutter/ui//home/components/filter_sheet.dart';
 import 'package:byat_flutter/ui/home/components/animated_search_bar.dart';
+import 'package:byat_flutter/ui/home/components/saved_searches.dart';
 import 'package:byat_flutter/ui/home/components/users_listview.dart';
 import 'package:byat_flutter/util/colors.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -93,7 +94,7 @@ class _HomeUIState extends State<HomeUI> {
           child: Stack(
             children: [
               UsersListView(controller: _pagingController),
-              _SavedSearches(onClearHistory: _pagingController.refresh),
+              SavedSearches(onClearHistory: _pagingController.refresh),
             ],
           ),
         ),
@@ -116,72 +117,3 @@ class _HomeUIState extends State<HomeUI> {
   }
 }
 
-
-class _SavedSearches extends StatelessWidget {
-  const _SavedSearches({
-    Key? key,
-    this.onClearHistory,
-    this.onHistoryTagTap,
-  }) : super(key: key);
-
-  final VoidCallback? onHistoryTagTap, onClearHistory;
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<SearchProvider>(builder: (context, searchProvider, child) {
-      final hasNotFocus = !searchProvider.searchFocusNode!.hasFocus;
-      final isHistoryEmpty = searchProvider.searchedHistory.isEmpty;
-      if (hasNotFocus || isHistoryEmpty) return const SizedBox();
-      return Positioned(
-        child: TweenAnimationBuilder(
-            duration: const Duration(milliseconds: 300),
-            tween: Tween(begin: const Offset(0, 1), end: const Offset(0, 0)),
-            builder: (context, offset, child) {
-              return AnimatedSlide(
-                duration: const Duration(seconds: 0),
-                offset: offset,
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          bottomRight: Radius.circular(8)),
-                      color: Color(0xFFE9E8E8)),
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
-                        children: searchProvider.searchedHistory
-                            .map((e) => CustomBadge(
-                                  title: e,
-                                  onTap: () {
-                                    searchProvider.onSavedHistoryTagTap(e);
-                                    if (onHistoryTagTap != null)
-                                      onHistoryTagTap!();
-                                  },
-                                ))
-                            .toList(),
-                      ),
-                      const Divider(),
-                      Align(
-                          alignment: Alignment.bottomRight,
-                          child: CustomBadge(
-                            title: 'Clear history',
-                            onTap: () {
-                              searchProvider.clearSearchHistory();
-                              if (onClearHistory != null) onClearHistory!();
-                            },
-                            backgroundColor: ByatColors.ligtGrey,
-                            titleColor: ByatColors.black,
-                          )),
-                    ],
-                  ),
-                ),
-              );
-            }),
-      );
-    });
-  }
-}
