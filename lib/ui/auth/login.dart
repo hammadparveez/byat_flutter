@@ -7,11 +7,12 @@ import 'package:byat_flutter/ui/base_widiget/loader_dialog.dart';
 import 'package:byat_flutter/ui/base_widiget/message_dialog.dart';
 import 'package:byat_flutter/ui/base_widiget/text_field.dart';
 import 'package:byat_flutter/util/colors.dart';
-
+import 'package:byat_flutter/util/extensions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_animations/simple_animations.dart';
 
 class LoginUI extends StatefulWidget {
   const LoginUI({super.key});
@@ -179,31 +180,37 @@ class _AnimatedImageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deviceWidth = MediaQuery.of(context).size.width;
-    return TweenAnimationBuilder(
-        tween: Tween(begin: -deviceWidth, end: 0.0),
-        duration: const Duration(milliseconds: 300),
-        builder: (context, value, child) {
-          return AnimatedContainer(
-            curve: Curves.decelerate,
-            transform: Matrix4.identity()..translate(value, 0),
-            duration: const Duration(milliseconds: 800),
-            clipBehavior: Clip.antiAlias,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    offset: const Offset(0, 15),
-                    color: ByatColors.ligtGrey.withOpacity(.2),
-                    blurRadius: 10,
-                    spreadRadius: 0.5)
-              ],
-              borderRadius: BorderRadius.only(bottomRight: Radius.circular(50)),
-              image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage('assets/images/home.jpg')),
-            ),
-          );
-        });
+    return LayoutBuilder(builder: (context, constraints) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: TweenAnimationBuilder(
+            tween: Tween(begin: -context.deviceWidth, end: 0.0),
+            duration: const Duration(milliseconds: 300),
+            builder: (context, value, child) {
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.decelerate,
+                transform: Matrix4.identity()..translate(value, .0),
+                clipBehavior: Clip.antiAlias,
+                width: double.infinity,
+                height: constraints.maxHeight,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        offset: const Offset(0, 15),
+                        color: ByatColors.ligtGrey.withOpacity(.2),
+                        blurRadius: 10,
+                        spreadRadius: 0.5)
+                  ],
+                  borderRadius:
+                      const BorderRadius.only(bottomRight: Radius.circular(50)),
+                  image: const DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage('assets/images/home.jpg')),
+                ),
+              );
+            }),
+      );
+    });
   }
 }

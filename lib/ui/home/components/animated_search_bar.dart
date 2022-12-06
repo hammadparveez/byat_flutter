@@ -3,7 +3,7 @@ import 'package:byat_flutter/ui/base_widiget/text_field.dart';
 import 'package:byat_flutter/util/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-
+import 'package:byat_flutter/util/extensions.dart';
 import 'package:provider/provider.dart';
 
 class AnimatedSearchBar extends StatefulWidget {
@@ -15,12 +15,20 @@ class AnimatedSearchBar extends StatefulWidget {
 
 class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
   late final SearchProvider _searchProvider;
-
+  final slideUpTween =
+      Tween<Offset>(begin: const Offset(0, -1), end: const Offset(0, 0));
   @override
   void initState() {
     super.initState();
     _initControllers();
     _attachListener();
+  }
+
+  @override
+  void dispose() {
+    _searchProvider.searchController!.dispose();
+    _searchProvider.searchFocusNode!.dispose();
+    super.dispose();
   }
 
   //Initializing controllers
@@ -29,14 +37,15 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
     _searchProvider.searchController = TextEditingController();
     _searchProvider.searchFocusNode = FocusNode();
   }
+
   //Attaching Listeners
   _attachListener() {
     _searchProvider.searchController!.addListener(_searchControllerListener);
     _searchProvider.searchFocusNode!.addListener(() {
       _searchProvider.saveSearchHistory();
-      if (!_searchProvider.hasFocus) {
-        _searchProvider.toggleSearch();
-      }
+      // if (!_searchProvider.hasFocus) {
+      //   _searchProvider.toggleSearch();
+      // }
     });
   }
 
@@ -47,79 +56,81 @@ class _AnimatedSearchBarState extends State<AnimatedSearchBar> {
     }
   }
 
-  @override
-  void dispose() {
-    // _searchProvider.searchController!.removeListener(_searchControllerListener);
-    _searchProvider.searchController!.dispose();
-    _searchProvider.searchFocusNode!.dispose();
-    super.dispose();
+  _onEditingComplete() {
+    _searchProvider.toggleSearch();
+    _searchProvider.unfocusField();
+  }
+
+  _onSearchCloseTap() {
+    if (_searchProvider.hasFocus) {
+      _searchProvider.clearText();
+      _searchProvider.unfocusField();
+    }
+    _searchProvider.toggleSearch();
   }
 
   @override
   Widget build(BuildContext context) {
     return Selector<SearchProvider, bool>(
-        selector: (_, provider) => provider.isSearching == true,
+        selector: (_, provider) => provider.isSearching,
         builder: (context, isSearching, child) {
           return AnimatedSwitcher(
             switchInCurve: Curves.fastOutSlowIn,
             switchOutCurve: Curves.fastOutSlowIn,
             duration: const Duration(milliseconds: 300),
             transitionBuilder: ((child, animation) {
-              var slideAnimation = Tween<Offset>(
-                      begin: const Offset(0, -1), end: const Offset(0, 0))
-                  .animate(animation);
+              var slideAnimation = slideUpTween.animate(animation);
               return SlideTransition(
                 position: slideAnimation,
                 child: child,
               );
             }),
             child: !isSearching
-                ? Align(
-                    alignment: Alignment.centerRight,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: IconButton(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        icon: const Icon(Icons.search),
-                        onPressed: () {
-                          var searchProvier = context.read<SearchProvider>();
-                          searchProvier.toggleSearch();
-                          searchProvier.searchFocusNode!.requestFocus();
-                        },
-                      ),
-                    ),
-                  )
-                : Container(
-                    alignment: Alignment.centerRight,
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: ByatColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ByatTextField(
-                      controller:
-                          context.read<SearchProvider>().searchController,
-                      focusNode: context.read<SearchProvider>().searchFocusNode,
-                      showBorder: false,
-                      suffixIconColor: Theme.of(context).colorScheme.onPrimary,
-                      textColor: Theme.of(context).colorScheme.primary,
-                      cursorColor: Theme.of(context).colorScheme.onPrimary,
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          final searchProvider = context.read<SearchProvider>();
-                          if (searchProvider.searchFocusNode?.hasFocus ??
-                              false) {
-                            searchProvider.searchController!.clear();
-                            searchProvider.searchFocusNode!.unfocus();
-                          }
-                          searchProvider.toggleSearch();
-                        },
-                      ),
-                    ),
-                  ),
+                ? _buildSearchIcon(context)
+                : _buildSearchTextField(context),
           );
         });
+  }
+
+  Align _buildSearchIcon(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: IconButton(
+          color: context.onPrimaryColor,
+          icon: const Icon(Icons.search),
+          onPressed: () {
+            _searchProvider.toggleSearch();
+            _searchProvider.focus();
+          },
+        ),
+      ),
+    );
+  }
+
+  Container _buildSearchTextField(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: ByatColors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ByatTextField(
+        onEditingComplete: _onEditingComplete,
+        showBorder: false,
+        controller: _searchProvider.searchController,
+        focusNode: _searchProvider.searchFocusNode,
+        suffixIconColor: Theme.of(context).colorScheme.onPrimary,
+        textColor: Theme.of(context).colorScheme.primary,
+        cursorColor: Theme.of(context).colorScheme.onPrimary,
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: _onSearchCloseTap,
+        ),
+      ),
+    );
   }
 }

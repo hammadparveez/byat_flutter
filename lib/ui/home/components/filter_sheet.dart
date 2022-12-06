@@ -16,6 +16,7 @@ import 'package:easy_localization/easy_localization.dart';
 class FilterSheet extends StatelessWidget {
   const FilterSheet({super.key, required this.pageController});
   final PagingController pageController;
+
   _onFilterApply(BuildContext context) {
     final filterProvider = context.read<FilterProvider>();
     final searchProvider = context.read<SearchProvider>();
@@ -45,8 +46,8 @@ class FilterSheet extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _filterByNationality(),
-            _filterDateRange(context),
+            _buildNationalityDropDown(),
+            _buildDateRange(context),
             const Spacer(),
             Row(
               children: [
@@ -99,17 +100,14 @@ class FilterSheet extends StatelessWidget {
     }
   }
 
-  FilterCard _filterDateRange(BuildContext context) {
+  FilterCard _buildDateRange(BuildContext context) {
     return FilterCard(
         child: Consumer<FilterProvider>(builder: (_, filterProvider, child) {
       return Row(
         children: [
           DateRangeCard(time: filterProvider.startDate!),
-          LayoutBuilder(builder: (context, constraints) {
-            debugPrint('-> $constraints');
-            return const SizedBox(
-                height: 50, child: VerticalDivider(color: ByatColors.white));
-          }),
+          const SizedBox(
+              height: 50, child: VerticalDivider(color: ByatColors.white)),
           DateRangeCard(time: filterProvider.endDate!),
           const SizedBox(width: 8),
           Expanded(
@@ -129,7 +127,7 @@ class FilterSheet extends StatelessWidget {
     }));
   }
 
-  FilterCard _filterByNationality() {
+  FilterCard _buildNationalityDropDown() {
     return FilterCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

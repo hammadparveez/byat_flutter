@@ -10,18 +10,19 @@ class SearchProvider extends ChangeNotifier {
   TextEditingController? searchController;
   FocusNode? searchFocusNode;
 
-
   List<String> searchedHistory = [];
   bool isSearching = false;
   final savedHistoryMaxLength = 12;
 
-  ///Setter for watch FilterProvider 
+  ///Setter for watch FilterProvider
   void update(FilterProvider provider) => filterProvider = provider;
 
   bool get hasFocus => searchFocusNode?.hasFocus ?? false;
+  void unfocusField() => searchFocusNode?.unfocus();
+  void focus() => searchFocusNode?.requestFocus();
   String? get text => searchController?.text;
+  void clearText()  => searchController?.clear();
 
-  
   toggleSearch() {
     isSearching = !isSearching;
     notifyListeners();

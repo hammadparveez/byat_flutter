@@ -2,7 +2,7 @@ import 'package:byat_flutter/util/colors.dart';
 import 'package:flutter/material.dart';
 
 class ByatTextField extends StatelessWidget {
-  ByatTextField({
+  const ByatTextField({
     Key? key,
     this.controller,
     this.focusNode,
@@ -14,10 +14,12 @@ class ByatTextField extends StatelessWidget {
     this.cursorColor,
     this.hintText,
     this.border,
+    this.onEditingComplete,
     this.isPassword = false,
     this.showBorder = true,
   }) : super(key: key);
 
+  final Function()? onEditingComplete;
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final Widget? prefixIcon, suffixIcon;
@@ -41,6 +43,7 @@ class ByatTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       focusNode: focusNode,
+      onEditingComplete: onEditingComplete,
       textAlignVertical: TextAlignVertical.center,
       obscureText: isPassword,
       style: TextStyle(color: textColor),

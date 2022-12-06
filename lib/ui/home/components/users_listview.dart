@@ -33,9 +33,10 @@ class UsersListView extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     filter.onUserSelect(user);
-                    Navigator.pushNamed(context, ByatRoute.userDetail);
+                    Navigator.pushNamed(context, ByatRoute.userDetail,
+                        arguments: index);
                   },
-                  child: _UserItemCard(user: user),
+                  child: _UserItemCard(user: user, index: index),
                 );
               }),
         ),
@@ -69,9 +70,11 @@ class _UserItemCard extends StatelessWidget {
   const _UserItemCard({
     Key? key,
     required this.user,
+    required this.index,
   }) : super(key: key);
 
   final UserModel user;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -86,19 +89,21 @@ class _UserItemCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-                border:
-                    Border.all(color: Theme.of(context).colorScheme.onPrimary),
-                shape: BoxShape.circle,
-                boxShadow: const [
-                  BoxShadow(blurRadius: 5, color: ByatColors.primaryDark)
-                ],
-                image: const DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage('assets/images/home.jpg'))),
+          Hero(
+            tag: 'detail-$index',
+            child: Container(
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                  border: Border.all(color: context.onPrimaryColor),
+                  shape: BoxShape.circle,
+                  boxShadow: const [
+                    BoxShadow(blurRadius: 5, color: ByatColors.primaryDark)
+                  ],
+                  image: const DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage('assets/images/home.jpg'))),
+            ),
           ),
           const SizedBox(width: 16),
           Column(
